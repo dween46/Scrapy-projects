@@ -6,10 +6,11 @@
 import scrapy
 
 
-# class linkItem(scrapy.Item):
+# class IphoneinfoItem(scrapy.Item):
 #     # define the fields for your item here like:
-#     link = scrapy.Field()
-    
+#     # name = scrapy.Field()
+#     pass
+
 
 class BackmarketItem(scrapy.Item):
     date= scrapy.Field()
@@ -21,5 +22,7 @@ class BackmarketItem(scrapy.Item):
     excellent = scrapy.Field()
     rating = scrapy.Field()
     reviews = scrapy.Field()
-
-
+    provider = scrapy.Field()
+    provider_link = scrapy.Field()
+    storage = scrapy.Field()
+    color = scrapy.Field()
