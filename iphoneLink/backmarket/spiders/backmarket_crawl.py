@@ -7,13 +7,13 @@ from scrapy.loader import ItemLoader
 #from scrapy.crawler import CrawlerProcess
 
 
-from ..items import BackmarketItem
-#from ..items import linkItem
+#from ..items import BackmarketItem
+from ..items import linkItem
 
 
 class BackmarketCrawlSpider(scrapy.Spider):
-    name = 'backmarket_crawl'
-    allowed_domains = ['www.backmarket.co.uk']
+    name = 'linkCrawl'
+    allowed_domains = ['backmarket.co.uk']
     today = pd.to_datetime("today").strftime("%d_%b_%y")
 
     start_urls = ["https://www.backmarket.co.uk/en-gb/l/iphone/aabc736a-cb66-4ac0-a3b7-0f449781ed39"]
@@ -63,37 +63,51 @@ class BackmarketCrawlSpider(scrapy.Spider):
     #     yield item
     #     #return item
 
-    def parse_product(self, response):
-        l = ItemLoader(item=BackmarketItem(), response=response)
+    # def parse_product(self, response):
+    #     l = ItemLoader(item=BackmarketItem(), response=response)
 
-        l.add_value('date', self.today)
-        l.add_css('product_name', 'h1::text')
-        l.add_css('product_id', 'li.md\:block.text-link-primary.overflow-hidden.flex-shrink.min-w-\[6ch\].hidden > div::text')
-        l.add_value('link', response.url)
-        l.add_css('fair', 'li:nth-child(1) > a > div > div.body-2-light.text-center.text-primary-light::text')
-        l.add_css('good', 'li:nth-child(2) > a > div > div.body-2-light.text-center.text-primary-light::text')
-        l.add_css('excellent', 'li:nth-child(3) > a > div > div.body-2-light.text-center.text-primary-light::text')
-        l.add_css('rating', 'div.hidden.md\:flex.flex-grow.flex-col > button > div > span::text')
-        l.add_css('reviews', 'div.hidden.md\:flex.flex-grow.flex-col > button > span::text')
+    #     l.add_value('date', self.today)
+    #     l.add_css('product_name', 'h1::text')
+    #     l.add_css('product_id', 'li.md\:block.text-link-primary.overflow-hidden.flex-shrink.min-w-\[6ch\].hidden > div::text')
+    #     l.add_value('link', response.url)
+    #     l.add_css('fair', 'li:nth-child(1) > a > div > div.body-2-light.text-center.text-primary-light::text')
+    #     l.add_css('good', 'li:nth-child(2) > a > div > div.body-2-light.text-center.text-primary-light::text')
+    #     l.add_css('excellent', 'li:nth-child(3) > a > div > div.body-2-light.text-center.text-primary-light::text')
+    #     l.add_css('rating', 'div.hidden.md\:flex.flex-grow.flex-col > button > div > span::text')
+    #     l.add_css('reviews', 'div.hidden.md\:flex.flex-grow.flex-col > button > span::text')
 
-        return l.load_item()
+    #     return l.load_item()
 
-    def parse_inside_links(self, response):
-        inside_links = response.css('div.md\:w-2\/3.lg\:w-1\/2.lg\:flex-1.max-w-full > div > div > div:nth-child(3) > div:nth-child(3)>ul > li >a::attr(href)').getall()
-        
-        for new_link in inside_links:
+
+    # def parse_color_links(self,response):
+    #     color_links = response.css('div.md\:w-2\/3.lg\:w-1\/2.lg\:flex-1.max-w-full > div > div > div:nth-child(3) > div:nth-child(3)>ul > li >a::attr(href)').getall()
+
+    #     for c_link in color_links:
+    #         item = linkItem()
+    #         inside_link = 'https://www.backmarket.co.uk' + c_link
+    #         print("***************************************************")
+    #         #yield scrapy.Request(inside_link, callback=self.parse_product)
+    #         item['link'] = inside_link
+    #         yield item
+
+    def parse_storage_links(self, response):
+        storage_links = response.css('div.md\:w-2\/3.lg\:w-1\/2.lg\:flex-1.max-w-full > div > div > div:nth-child(3) > div:nth-child(3)>ul > li >a::attr(href)').getall()
+        for new_link in storage_links:
+            item = linkItem()
             inside_link = 'https://www.backmarket.co.uk' + new_link
-            #print("***************************************************")
-            yield scrapy.Request(inside_link, callback=self.parse_product)
+            print("***************************************************")
+            #yield scrapy.Request(inside_link, callback=self.parse_product)
+            item['link'] = inside_link
+            yield item
             
 
-    def parse_links(self, response):
+    def parse_page_links(self, response):
         all_links = response.css('section > div > div.grid.grid-cols-1.gap-4.md\:gap-7.lg\:grid-cols-\[repeat\(3\,26\.2rem\)\].md\:mx-auto.lg\:mr-4.md\:grid-cols-\[repeat\(2\,26\.2rem\)\] > div > a::attr(href)').getall()
         
         #print(f"***************************   {len(all_links)}  ***************************")
         for link in all_links:
             p_url = 'https://www.backmarket.co.uk' + link
-            yield scrapy.Request(p_url, callback=self.parse_inside_links)
+            yield scrapy.Request(p_url, callback=self.parse_storage_links)
 
 
     def parse(self, response):
@@ -101,7 +115,7 @@ class BackmarketCrawlSpider(scrapy.Spider):
         if totalPage:
             for i in range(1, totalPage+1):
                 url = "https://www.backmarket.co.uk/en-gb/l/iphone/aabc736a-cb66-4ac0-a3b7-0f449781ed39?page={}".format(i)
-                yield scrapy.Request(url, callback=self.parse_links)
+                yield scrapy.Request(url, callback=self.parse_page_links)
 
         
         
