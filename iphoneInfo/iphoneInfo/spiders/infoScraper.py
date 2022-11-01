@@ -29,21 +29,21 @@ class ExampleSpider(scrapy.Spider):
         try:
             item['fair'] = response.css('li:nth-child(1) > a > div > div.body-2-light.text-center.text-primary-light::text').get().strip().replace('\n', '').replace('£', '')
         except:
-            item['fair'] = "Sold out"
+            item['fair'] = "-1"
         try:
             item['good']= response.css('li:nth-child(2) > a > div > div.body-2-light.text-center.text-primary-light::text').get().strip().replace('\n', '').replace('£', '')
         except:
-            item['good'] = "Sold out"
+            item['good'] = "-1"
         try:
             item['excellent'] = response.css('li:nth-child(3) > a > div > div.body-2-light.text-center.text-primary-light::text').get().strip().replace('\n', '').replace('£', '')
         except:
-            item['excellent'] = "Sold out"
+            item['excellent'] = "-1"
         try:
             item['rating'] = response.css('div.hidden.md\:flex.flex-grow.flex-col > button > div > span::text').get().strip().replace('\n', '').replace('/5', '')
         except:
             item['rating'] = "N/A"
         try:
-            item['reviews'] = response.css('div.hidden.md\:flex.flex-grow.flex-col > button > span::text').get().strip().replace('\n', '').replace('(', '').replace(')', '').replace(' reviews', '')
+            item['reviews'] = response.css('div.hidden.md\:flex.flex-grow.flex-col > button > span::text').get().strip().replace('\n', '').replace('(', '').replace(')', '').replace(' reviews', '').replace(',', '')
         except:
             item['reviews'] = "N/A"
         try:
