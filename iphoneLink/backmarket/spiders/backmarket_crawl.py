@@ -95,7 +95,7 @@ class BackmarketCrawlSpider(scrapy.Spider):
         for new_link in storage_links:
             item = linkItem()
             inside_link = 'https://www.backmarket.co.uk' + new_link
-            print("***************************************************")
+            #print("***************************************************")
             #yield scrapy.Request(inside_link, callback=self.parse_product)
             item['link'] = inside_link
             yield item
