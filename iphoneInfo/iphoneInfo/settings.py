@@ -10,7 +10,7 @@ today = pd.to_datetime("today").strftime("%d_%b_%y")
 
 
 FEED_FORMAT = "csv" 
-FEED_URI = f"{today}_backmarket_iphone_data.csv"
+FEED_URI = f"./csv/{today}_backmarket_iphone_data.csv"
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
 #
