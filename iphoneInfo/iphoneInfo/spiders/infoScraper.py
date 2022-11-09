@@ -7,8 +7,8 @@ class ExampleSpider(scrapy.Spider):
     name = 'infoScraper'
     allowed_domains = ['backmarket.co.uk']
     today = pd.to_datetime("today").strftime("%d_%b_%y")
-    #df = pd.read_csv("{}_backmarket_iphone_links.csv".format(today))
-    df = pd.read_csv("./csv/02_nov_22_backmarket_iphone_links.csv")
+    df = pd.read_csv("././csv/links/{}_backmarket_iphone_links.csv".format(today))
+    #df = pd.read_csv("./csv/07_nov_22_backmarket_iphone_links.csv".format(today))
 
     start_urls = list(df['link'].str.split('#', expand = True)[0].unique())
 
