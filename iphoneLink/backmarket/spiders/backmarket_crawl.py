@@ -91,7 +91,8 @@ class BackmarketCrawlSpider(scrapy.Spider):
     #         yield item
 
     def parse_storage_links(self, response):
-        storage_links = response.css('div.md\:w-2\/3.lg\:w-1\/2.lg\:flex-1.max-w-full > div > div > div:nth-child(3) > div:nth-child(3)>ul > li >a::attr(href)').getall()
+        #storage_links = response.css('div.md\:w-2\/3.lg\:w-1\/2.lg\:flex-1.max-w-full > div > div > div:nth-child(3) > div:nth-child(3)>ul > li >a::attr(href)').getall()
+        storage_links = response.css('div > div > div:nth-child(4) > div:nth-child(2) > ul > li > a::attr(href)').getall()
         for new_link in storage_links:
             item = linkItem()
             inside_link = 'https://www.backmarket.co.uk' + new_link
